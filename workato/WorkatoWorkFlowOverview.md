@@ -4,7 +4,7 @@ This folder contains redacted exports of SYNaTRA's core automation recipes (Skil
 Each recipe orchestrates data retrieval and transformation across Salesforce, Jira, and Snowflake.
 
 ## Workato Workflow
-![Workato Workflow](./diagrams/workatoWorkflow.svg)
+![Workato Workflow](../diagrams/workatoWorkflow.svg)
 ---
 ## [Search for Account Id with Account Name](./recipes/SearchforAccountIdwithName.md)
 If an account name is provided for the customer associated otherwise this step is skipped. Search part or all of the customer name to retrieve an account id to proceed in the following searches.

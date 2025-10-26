@@ -90,7 +90,7 @@ Core Components:
 
 | Metric | Baseline | SYNaTRA Impact |
 |--------|-----------|----------------|
-| Time-to-Context | ~15 minutes | 3–5 minutes |
+| Time-to-Context | ~15 minutes | 2-3 minutes |
 | First-Contact Resolution (FCR) | 68% | 82% (projected) |
 | New CSM Ramp Time | 8 weeks | 4–5 weeks |
 | Customer CSAT | baseline +10% (target) |  |

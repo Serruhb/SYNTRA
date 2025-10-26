@@ -47,7 +47,7 @@ Core Components:
   - Custom Customer Profile extension controller used as a Phase 1 sanity check to validate account and subscription data integrity of Agent.
   - SOQL queries for active subscriptions, current cases, past 20 cases and account metadata.
 
-- Workato Automation Layer
+- [Workato Automation Layer](/workato/WorkatoWorkFlowOverview.md)
   - Orchestrates cross-system data retrieval.
   - Executes SOQL, JQL, and SQL queries to aggregate insights.
   - Normalizes data for AI summarization.

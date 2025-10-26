@@ -1,0 +1,158 @@
+<apex:page standardController="Account" extensions="CustomerProfile" standardStylesheets="false" sidebar="false" showHeader="true">
+    
+    <apex:slds />
+    
+    <style>
+        .slds-dl_horizontal__label { width: 30%; }
+        .slds-dl_horizontal__detail { width: 70%; }
+        .table-container-scrolling {
+            max-height: 400px; 
+            overflow-y: auto;
+        }
+    </style>
+    
+    <div class="slds-scope">
+        <div class="slds-box slds-theme_default slds-p-around_large">
+            
+            <h1 class="slds-text-heading_large slds-m-bottom_medium">
+                Customer Profile: {!Account.Name}
+            </h1>
+            
+            <apex:pageMessages id="messages"/>
+            
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                
+                <!-- Account Information -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <h2 class="slds-text-heading_medium slds-truncate">Account Information</h2>
+                        </div>
+                        <div class="slds-card__body slds-card__body_inner">
+                            <dl class="slds-list_horizontal slds-wrap">
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Account Name:</dt>
+                                <dd class="slds-item_detail slds-truncate">{!Account.Name}</dd>
+                                
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Account Owner:</dt>
+                                <dd class="slds-item_detail slds-truncate">{!Account.Owner.Name}</dd>
+                                
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Company Type:</dt>
+                                <dd class="slds-item_detail slds-truncate">{!Account.Company_Type__c}</dd> 
+                                
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Account Type:</dt>
+                                <dd class="slds-item_detail slds-truncate">{!Account.Type}</dd>
+                                
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Business Phone:</dt>
+                                <dd class="slds-item_detail slds-truncate"><apex:outputField value="{!Account.Phone}"/></dd>
+                                
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Address:</dt>
+                                <dd class="slds-item_detail">
+                                    <apex:outputField value="{!Account.BillingStreet}"/><br/>
+                                    <apex:outputField value="{!Account.BillingCity}"/><apex:outputField value="{!Account.BillingState}" rendered="{!Account.BillingCity != null && Account.BillingState != null}"/>,
+                                    <apex:outputField value="{!Account.BillingPostalCode}"/>
+                                    <apex:outputField value="{!Account.BillingCountry}"/>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Primary Contact (sanitized) -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <div class="slds-card">
+                        <div class="slds-card__header slds-grid">
+                            <h2 class="slds-text-heading_medium slds-truncate">Primary Contact</h2>
+                        </div>
+                        <div class="slds-card__body slds-card__body_inner">
+                            <apex:outputPanel rendered="{!primaryContact != null}">
+                                <dl class="slds-list_horizontal slds-wrap">
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Name:</dt>
+                                    <dd class="slds-item_detail slds-truncate">{!primaryContact.Name}</dd>
+                                    
+                                    <!-- Sensitive fields redacted -->
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Email:</dt>
+                                    <dd class="slds-item_detail slds-truncate"><apex:outputField value="{!primaryContact./*<REDACTED__c>*/}"/></dd>
+                                    
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Phone:</dt>
+                                    <dd class="slds-item_detail slds-truncate"><apex:outputField value="{!primaryContact./*<REDACTED__c>*/}"/></dd>
+                                    
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Mobile:</dt>
+                                    <dd class="slds-item_detail slds-truncate"><apex:outputField value="{!primaryContact./*<REDACTED__c>*/}"/></dd>
+                                </dl>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!primaryContact == null}">
+                                <p class="slds-text-body_regular">No primary contact found.</p>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Case History -->
+            <div class="slds-card slds-m-bottom_medium">
+                <div class="slds-card__header slds-grid">
+                    <h2 class="slds-text-heading_medium slds-truncate">Case History</h2>
+                </div>
+                <div class="slds-card__body">
+                </div>
+            </div>
+            
+            <!-- Active Subscriptions (sanitized) -->
+            <h2 class="slds-text-heading_medium slds-m-top_large slds-m-bottom_medium">
+                Active Subscriptions
+            </h2>
+            
+            <apex:outputPanel rendered="{!validContracts.size > 0}">
+                <apex:repeat value="{!validContracts}" var="contract">
+                    <div class="slds-card slds-m-bottom_medium">
+                        <div class="slds-card__header slds-grid">
+                            <h3 class="slds-text-heading_small slds-truncate">
+                                <a href="{!lightningBaseUrl}/lightning/r/Contract/{!contract.Id}/view" target="_blank">
+                                   Contract:&nbsp;&nbsp;{!contract.ContractNumber}
+                                   <br/>Pricing Family: {!contract.Pricing_Family__c}
+                                </a>
+                            </h3>
+                        </div>
+                        <div class="slds-card__body slds-card__body_inner">
+                            <dl class="slds-list_horizontal slds-wrap slds-m-bottom_medium">
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Status:&nbsp;&nbsp;<apex:outputField value="{!contract.Status}"/></dt>                             
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Start Date:&nbsp;&nbsp;<apex:outputField value="{!contract.StartDate}"/></dt>
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">End Date:&nbsp;&nbsp;<apex:outputField value="{!contract.EndDate}"/></dt>
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Term (Months):&nbsp;&nbsp;<apex:outputField value="{!contract.ContractTerm}"/></dt>
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">External ID:&nbsp;&nbsp;<apex:outputField value="{!contract./*<REDACTED__c>*/}"/></dt>
+                            </dl>
+                            
+                            <h4 class="slds-text-heading_label slds-m-bottom_small">Subscriptions on this Contract</h4>
+                            
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th scope="col"><div class="slds-truncate">/*<REDACTED__c>*/</div></th>
+                                        <th scope="col"><div class="slds-truncate">Product Name</div></th>
+                                        <th scope="col"><div class="slds-truncate">/*<REDACTED__c>*/</div></th>
+                                        <th scope="col"><div class="slds-truncate">Quantity</div></th>
+                                        <th scope="col"><div class="slds-truncate">/*<REDACTED__c>*/</div></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <apex:repeat value="{!validContractsMap[contract.Id]}" var="sub">
+                                        <tr>
+                                            <td><apex:outputField value="{!sub./*<REDACTED__c>*/}"/></td>
+                                            <td><apex:outputField value="{!sub.SBQQ__Product__r.Simplified_Product_Name__c}"/></td>
+                                            <td><apex:outputField value="{!sub./*<REDACTED__c>*/}"/></td>
+                                            <td><apex:outputField value="{!sub.SBQQ__Quantity__c}"/></td>
+                                            <td><apex:outputField value="{!sub./*<REDACTED__c>*/}"/></td>
+                                        </tr>
+                                    </apex:repeat>
+                                    <apex:outputPanel rendered="{(!validContractsMap[contract.Id]).size == 0}">
+                                        <tr><td colspan="5" class="slds-text-align_center">No Active Contract found for this Account.</td></tr>
+                                    </apex:outputPanel>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </apex:repeat>
+            </apex:outputPanel>
+        </div>
+    </div>
+</apex:page>
